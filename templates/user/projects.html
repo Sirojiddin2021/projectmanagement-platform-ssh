@@ -1,0 +1,970 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Projects
+{% endblock %}
+
+{% block main %}
+
+<div class="justify-content-sm-center text-left py-3">
+  <div class="row">
+    <div class="col-lg-8 col-md-7 col-sm-12 float-left">
+      <p class="h2">Organize your projects with project board</p>
+      <p class="color-text-secondary">You can manage your projects and tasks in this section easily. Create a project board on platform to manage and automate your workflow.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-8 col-md-7 col-sm-12 float-left">
+      <div class="btn-group" role="group">
+    <a id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="#">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+  <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+</svg> Add
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+      <li><button class="dropdown-item" data-toggle="modal" data-target="#add_section">Add section</button></li>
+      <li><button class="dropdown-item" data-toggle="modal" data-target="#add_project">Add project</button></li>
+      <li><button class="dropdown-item" data-toggle="modal" data-target="#add_task">Add task</button></li>
+      <li><button class="dropdown-item" data-toggle="modal" data-target="#add_subtask">Add subtask</button></li>
+    </ul>
+  </div>
+    </div>
+  </div>
+</div>
+
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#sections" type="button" role="tab" aria-controls="sections" aria-selected="false">Sections</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#projects" type="button" role="tab" aria-controls="projects" aria-selected="true">Projects</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#tasks" type="button" role="tab" aria-controls="tasks" aria-selected="false">Tasks</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#subtasks" type="button" role="tab" aria-controls="subtasks" aria-selected="false">SubTasks</button>
+  </li>
+</ul>
+
+
+
+<div class="tab-content" id="myTabContent">
+  <!------------------------------------------------------Sections tab---------------------------------------------------------->
+  <div class="tab-pane fade" id="sections" role="tabpanel" aria-labelledby="home-tab">In this section you can add, delete or edit project sections
+    <table class="table table-hover text-left">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Last update time</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user_section in user_sections %}
+        <tr>
+          <td data-label="#">{{ loop.index }}</td>
+          <td data-label="Name">{{ user_section.Name }}</td>
+          <td data-label="Description">{{ user_section.Description }}</td>
+          <td data-label="Recorded Date">{{ user_section.RDT }}</td>
+          <td data-label="">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit_section_{{ user_section.Id }}">
+              Edit
+            </button></td>
+          <td data-label="">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_section_{{ user_section.Id }}">
+              Delete
+            </button>
+          </td>
+        </tr>
+
+        <!------------------------------------------------- Modal to delete section ----------------------------------------------------------->
+        <div class="modal fade" id="delete_section_{{ user_section.Id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Delete ({{ user_section.Name }})</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete this section?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a href="/{{ session.user_id }}/section/delete/{{ user_section.Id }}" type="button" class="btn btn-danger">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-------------------------------------------------- Modal to update section ------------------------------------------------------------>
+        <div class="modal fade" id="edit_section_{{ user_section.Id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Edit ({{ user_section.Name }})</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+
+                <form action="/{{ session.user_id }}/section/edit/{{ user_section.Id }}" method="POST">
+                    {{ form.hidden_tag() }}
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="form-label" for="u_section_name">Section name:</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input required autocomplete="off" autofocus class="form-control" id="u_section_name" name="e_section_name" type="text" value="{{ user_section.Name }}">
+                    </div>
+                  </div>
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="form-label" for="u_section_description">Section description:</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <textarea id="u_section_description" class="form-control" name="e_section_description" rows="5" maxlength="200">{{ user_section.Description }}</textarea>
+                    </div>
+                  </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" type="submit">Update</button>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!--------------------------------------------- Projects tab---------------------------------------------------------------------------->
+  <div class="tab-pane fade show active" id="projects" role="tabpanel" aria-labelledby="profile-tab">This is projects tab
+
+    <table class="table table-hover text-left">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Project Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">Due Date</th>
+          <th scope="col">Section</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user_project in t_projects %}
+        <tr>
+          <td data-label="#">{{ loop.index }}</td>
+          <td data-label="Project Name">{{ user_project.Name }}</td>
+          <td data-label="Description">{{ user_project.Description }}</td>
+          <td data-label="Planned Start Date">{{ user_project.SD }}</td>
+          <td data-label="Planned End Date">{{ user_project.DD }}</td>
+          <td data-label="Section">{{ user_project.Section_name}}</td>
+          <td data-label="" class="text-white">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit_project_{{ user_project.Id }}">
+              Edit
+            </button>
+          </td>
+          <td data-label="">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_project_{{ user_project.Id }}">
+              Delete
+            </button>
+          </td>
+        </tr>
+
+        <!-- Modal to delete -->
+        <div class="modal fade" id="delete_project_{{ user_project.Id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Delete ({{ user_project.Name }})</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete this project with its tasks?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a href="/{{ session.user_id }}/project/delete/{{ user_project.Id }}" type="button" class="btn btn-danger">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal to update -->
+        <div class="modal fade" id="edit_project_{{ user_project.Id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Edit ({{ user_project.Name }})</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+
+                <form action="/{{ session.user_id }}/project/edit/{{ user_project.Id }}" method="POST">
+                    {{ form.hidden_tag() }}
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="form-label" for="u_project_name">Project name:</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input required autocomplete="off" autofocus id="u_project_name" class="form-control" name="e_project_name" type="text" value="{{ user_project.Name }}">
+                    </div>
+                  </div>
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="form-label" for="u_project_description">Project description:</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <textarea id="u_project_description" class="form-control" name="e_project_description" rows="5" maxlength="200">{{ user_project.Description }}</textarea>
+                    </div>
+                  </div>
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="form-label" for="u_project_sd">Start Date:</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        <input required autocomplete="off" class="form-control" id="u_project_sd" name="e_project_SD" placeholder="YYYY-MM-DD" type="text" value="{{ user_project.SD }}"/>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="form-label" for="u_project_dd">Due date:</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        <input required autocomplete="off" class="form-control" id="u_project_dd" name="e_project_DD" placeholder="YYYY-MM-DD" type="text" value="{{ user_project.DD }}"/>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="control-label requiredField" for="project_section">Project section</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <select id="project_section" class="form-control" name="e_project_section">
+                        <option selected value="{{ user_project.Section_id }}">{{ user_project.Section_name }}</option>
+                        {% for section in all_user_sections %}
+                          <option value="{{ section.Id }}">{{ section.Name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" type="submit">Update</button>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tab-pane fade" id="tasks" role="tabpanel" aria-labelledby="contact-tab">This is tasks tab
+
+    <!--------------------------Tasks--------------------------------------------------------------->
+    <table class="table table-hover text-left">
+      <thead class="thead-light">
+          <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Start Date</th>
+              <th scope="col">Due Date</th>
+              <th scope="col">Project</th>
+              <th scope="col">Priority</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for task in t_tasks %}
+        <tr>
+            <td data-label="#">{{ loop.index }}</td>
+            <td data-label="Name">{{ task.Name }}</td>
+            <td data-label="Description">{{ task.Description }}</td>
+            <td data-label="Start Date">{{ task.SD }}</td>
+            <td data-label="Due Date">{{ task.DD }}</td>
+            <td data-label="Project">{{ task.Project_name}}</td>
+            <td data-label="Priority">{{ task.Priority_name }}</td>
+            <td data-label="">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit_task_{{ task.Id }}">
+                  Edit
+                </button>
+            </td>
+            <td data-label="">
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_task_{{ task.Id }}">
+                  Delete
+                </button>
+            </td>
+        </tr>
+        <!-- Modal to delete -->
+        <div class="modal fade" id="delete_task_{{ task.Id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Delete ({{ task.Name }})</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete this task?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <a href="/{{ session.user_id }}/task/delete/{{ task.Id }}" type="button" class="btn btn-danger">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!------------------------------------------------- Modal to task update ---------------------------------------------------------------------->
+        <div class="modal fade" id="edit_task_{{ task.Id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Edit ({{ task.Name }})</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <!-----------------------Form--------------------------------------------------------------------------->
+                <form action="/{{ session.user_id }}/task/edit/{{ task.Id }}" method="POST">
+                  {{ form.hidden_tag() }}
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="control-label requiredField" for="u_task_name">Task name</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <input autocomplete="off" autofocus class="form-control" id="u_task_name" name="e_task_name" type="text" value="{{ task.Name }}">
+                    </div>
+                  </div>
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="control-label requiredField" for="u_task_description">Task description</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <textarea id="u_task_description" class="form-control" name="e_task_description" rows="5" maxlength="200">{{ task.Description }}</textarea>
+                    </div>
+                  </div>
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="control-label requiredField" for="u_task_sd">Start Date<span class="asteriskField">*</span></label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        <input required autocomplete="off" class="form-control" id="u_task_sd" name="e_task_SD" placeholder="YYYY-MM-DD" type="text" value="{{ task.SD }}"/>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="control-label requiredField" for="u_task_dd">Due Date<span class="asteriskField">*</span></label>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                            </div>
+                            <input required autocomplete="off" class="form-control" id="u_task_dd" name="e_task_DD" placeholder="YYYY-MM-DD" type="text" value="{{ task.DD }}"/>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="control-label requiredField" for="u_task_priority">Priority</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <select class="form-control" id="u_task_priority" name="e_task_priority">
+                        <option selected value="{{ task.PriorityID }}">{{ task.Priority_name }}</option>
+                        {% for priority in priorities %}
+                        <option value="{{ priority.Id }}">{{ priority.Name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group row justify-content-sm-center text-left">
+                    <div class="col-sm-4 text-left">
+                      <label class="control-label requiredField" for="u_task_project">Project</label>
+                    </div>
+                    <div class="col-sm-8">
+                      <select id="u_task_project" class="form-control" name="e_task_project">
+                        <option selected value="{{ task.ProjectID }}">{{ task.Project_name }}</option>
+                        {% for project in t_projects %}
+                        <option value="{{ project.Id }}">{{ project.Name }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" type="submit">Update</button>
+                </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tab-pane fade" id="subtasks" role="tabpanel" aria-labelledby="contact-tab">This is subtasks tab
+
+  <!-----------------------------------------------------------------Subtask -------------------------------------------------------------------->
+
+  <table class="table table-hover text-left">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Start Date</th>
+        <th scope="col">Due Date</th>
+        <th scope="col">Project</th>
+        <th scope="col">Task</th>
+        <th scope="col">Priority</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for subtask in t_subtasks %}
+      <tr>
+        <td data-label="#">{{ loop.index }}</td>
+        <td data-label="Name">{{ subtask.Name }}</td>
+        <td data-label="Description">{{ subtask.Description }}</td>
+        <td data-label="Start Date">{{ subtask.SD }}</td>
+        <td data-label="Due Date">{{ subtask.DD }}</td>
+        <td data-label="Project">{{ subtask.Project_name}}</td>
+        <td data-label="Task">{{ subtask.Task_name }}</td>
+        <td data-label="Priority">{{ subtask.Priority_name }}</td>
+        <td data-label="">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit_subtask_{{ subtask.Id }}">
+            Edit
+          </button>
+        </td>
+        <td data-label="">
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete_subtask_{{ subtask.Id }}">
+            Delete
+          </button>
+        </td>
+      </tr>
+
+      <!------------------------------------------------------------- Modal to delete subtask ------------------------------------------------------------->
+      <div class="modal fade" id="delete_subtask_{{ subtask.Id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">Delete ({{ subtask.Name }})</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete this subtask?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <a href="/{{ session.user_id }}/subtask/delete/{{ subtask.Id }}" type="button" class="btn btn-danger">Delete</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-------------------------------------------------------- Modal to update Subtask ---------------------------------------------------------------->
+      <div class="modal fade" id="edit_subtask_{{ subtask.Id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">Edit ({{ subtask.Name }})</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <form action="/{{ session.user_id }}/subtask/edit/{{ subtask.Id }}" method="POST">
+                {{ st_form.hidden_tag() }}
+
+                <div class="form-group row justify-content-sm-center text-left">
+                  <div class="col-sm-4 text-left">
+                    <label class="control-label requiredField" for="u_subtask_name">Subtask Name</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input autocomplete="off" autofocus class="form-control" id="u_subtask_name" name="e_subtask_name" type="text" value="{{ subtask.Name }}">
+                  </div>
+                </div>
+
+
+                <div class="form-group row justify-content-sm-center text-left">
+                  <div class="col-sm-4 text-left">
+                    <label class="control-label requiredField" for="u_subtask_description">Subtask Description</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea id="u_subtask_description" class="form-control" name="e_subtask_description" rows="5" maxlength="200">{{ subtask.Description }}</textarea>
+                  </div>
+                </div>
+
+                <div class="form-group row justify-content-sm-center text-left">
+                  <div class="col-sm-4 text-left">
+                    <label class="control-label requiredField" for="u_subtask_sd">Start Date<span class="asteriskField">*</span></label>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                      </div>
+                      <input required autocomplete="off" class="form-control" id="u_subtask_sd" name="e_subtask_SD" placeholder="YYYY-MM-DD" type="text" value="{{ subtask.SD }}"/>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group row justify-content-sm-center text-left">
+                  <div class="col-sm-4 text-left">
+                    <label class="control-label requiredField" for="u_subtask_ed">Due Date<span class="asteriskField">*</span></label>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                      </div>
+                      <input required autocomplete="off" class="form-control" id="u_subtask_ed" name="e_subtask_DD" placeholder="YYYY-MM-DD" type="text" value="{{ subtask.DD }}"/>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group row justify-content-sm-center text-left">
+                  <div class="col-sm-4 text-left">
+                    <label class="control-label requiredField" for="subtask_prority">Priority</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <select id="subtask_prority" class="form-control" name="e_subtask_priority">
+                      <option selected value="{{ subtask.PriorityID }}">{{ subtask.Priority_name }}</option>
+                        {% for priority in priorities %}
+                        <option value="{{ priority.Id }}">{{ priority.Name }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row justify-content-sm-center text-left">
+                  <div class="col-sm-4 text-left">
+                    <label class="control-label requiredField" for="subtask_task">Task name</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <select id="subtask_task" class="form-control" name="e_subtask_task">
+                      <option selected value="{{ subtask.Task_id }}">{{ subtask.Task_name }}</option>
+                      {% for task in t_tasks %}
+                        <option value="{{ task.Id }}">{{ task.Name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button class="btn btn-primary" type="submit">Update</button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+
+
+
+
+  <!---------------------------------------------------- Modal to add section ---------------------------------------------------->
+  <div class="modal fade" id="add_section" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Add new section</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <form action="/{{ session.user_id }}/sections" method="POST">
+              {{ form.hidden_tag() }}
+
+            <div class="form-group row justify-content-sm-center text-left">
+              <div class="col-sm-4 text-left">
+                <label class="form-label" for="add_section_name">Section name:</label>
+              </div>
+              <div class="col-sm-8">
+                <input required autocomplete="off" autofocus class="form-control" id="add_section_name" name="section_name" type="text">
+              </div>
+            </div>
+
+            <div class="form-group row justify-content-sm-center text-left">
+              <div class="col-sm-4 text-left">
+                <label class="form-label" for="add_section_description">Section description:</label>
+              </div>
+              <div class="col-sm-8">
+                <textarea id="add_section_description" class="form-control" name="section_description" rows="5" maxlength="200"></textarea>
+              </div>
+            </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" type="submit">Add</button>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--------------------------------------------------- Modal to add project ------------------------------------------------------>
+  <div class="modal fade" id="add_project" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Add new project</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <form action="/{{ session.user_id }}/projects" method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group row justify-content-sm-center text-left">
+              <div class="col-sm-4 text-left">
+                <label class="form-label" for="add_project_name">Project name:</label>
+              </div>
+              <div class="col-sm-8">
+                <input required autocomplete="off" id="add_project_name" autofocus class="form-control" name="project_name" type="text">
+              </div>
+            </div>
+
+            <div class="form-group row justify-content-sm-center text-left">
+              <div class="col-sm-4 text-left">
+                <label class="form-label" for="add_project_description">Project description:</label>
+              </div>
+              <div class="col-sm-8">
+                <textarea id="add_project_description" class="form-control" name="project_description" rows="5" maxlength="200"></textarea>
+              </div>
+            </div>
+
+            <div class="form-group row justify-content-sm-center text-left">
+              <div class="col-sm-4 text-left">
+                <label class="form-label" for="add_project_sd">Start Date:</label>
+              </div>
+              <div class="col-sm-8">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                  </div>
+                  <input required autocomplete="off" class="form-control" id="add_project_sd" name="project_SD" placeholder="YYYY-MM-DD" type="text"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row justify-content-sm-center text-left">
+              <div class="col-sm-4 text-left">
+                <label class="form-label" for="add_project_dd">Due Date:</label>
+              </div>
+              <div class="col-sm-8">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                  </div>
+                  <input required autocomplete="off" class="form-control" id="add_project_dd" name="project_DD" placeholder="YYYY-MM-DD" type="text"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row justify-content-sm-center text-left">
+              <div class="col-sm-4 text-left">
+                <label class="control-label requiredField" for="add_project_section">Project section</label>
+              </div>
+              <div class="col-sm-8">
+                <select id="add_project_section" class="form-control" name="project_section">
+                  {% for section in all_user_sections %}
+                    <option value="{{ section.Id }}">{{ section.Name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" type="submit">Add</button>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+    <!------------------------------------------------------------ Modal to add new task ---------------------------------------->
+    <div class="modal fade" id="add_task" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">Add new task</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <!-------------------------------- Add new task--------------------------------------->
+            <form action="/{{ session.user_id }}/tasks" method="POST">
+              {{ form.hidden_tag() }}
+              <div class="form-group row justify-content-sm-center text-left">
+                <div class="col-sm-4 text-left">
+                  <label class="control-label requiredField" for="add_task_name">Task name</label>
+                </div>
+                <div class="col-sm-8">
+                  <input required autocomplete="off" autofocus class="form-control" id="add_task_name" name="task_name" type="text">
+                </div>
+              </div>
+
+              <div class="form-group row justify-content-sm-center text-left">
+                <div class="col-sm-4 text-left">
+                  <label class="control-label requiredField" for="add_task_description">Task description</label>
+                </div>
+                <div class="col-sm-8">
+                  <textarea id="add_task_description" class="form-control" name="task_description" rows="5" maxlength="200"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group row justify-content-sm-center text-left">
+                <div class="col-sm-4 text-left">
+                  <label class="control-label requiredField" for="add_task_sd">Start Date<span class="asteriskField">*</span></label>
+                </div>
+                <div class="col-sm-8">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                    </div>
+                    <input required autocomplete="off" class="form-control" id="add_task_sd" name="task_SD" placeholder="YYYY-MM-DD" type="text"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group row justify-content-sm-center text-left">
+                <div class="col-sm-4 text-left">
+                  <label class="control-label requiredField" for="add_task_dd">Due Date<span class="asteriskField">*</span></label>
+                </div>
+                <div class="col-sm-8">
+                  <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        <input required autocomplete="off" class="form-control" id="add_task_dd" name="task_DD" placeholder="YYYY-MM-DD" type="text"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group row justify-content-sm-center text-left">
+                <div class="col-sm-4 text-left">
+                  <label class="control-label requiredField" for="add_task_priority">Priority</label>
+                </div>
+                <div class="col-sm-8">
+                  <select class="form-control" id="add_task_priority" name="task_priority">
+                    {% for priority in priorities %}
+                    <option value="{{ priority.Id }}">{{ priority.Name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group row justify-content-sm-center text-left">
+                <div class="col-sm-4 text-left">
+                  <label class="control-label requiredField" for="add_task_project">Project</label>
+                </div>
+                <div class="col-sm-8">
+                  <select id="add_task_project" class="form-control" name="task_project">
+                    {% for project in t_projects %}
+                    <option value="{{ project.Id }}">{{ project.Name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" type="submit">Add</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+<!------------------------------------------------------------------ Modal to add Subtask --------------------------------------------------------->
+
+<div class="modal fade" id="add_subtask" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Add new subtask</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/{{ session.user_id }}/subtasks" method="POST" class="form-detail">
+          {{ form.hidden_tag() }}
+
+          <div class="form-group row justify-content-sm-center text-left">
+            <div class="col-sm-4 text-left">
+              <label class="control-label requiredField" for="add_subtask_name">Subtask name<span class="asteriskField">*</span></label>
+            </div>
+            <div class="col-sm-8">
+              <input required autocomplete="off" autofocus class="form-control" id="add_subtask_name" name="subtask_name" type="text">
+            </div>
+          </div>
+
+          <div class="form-group row justify-content-sm-center text-left">
+            <div class="col-sm-4 text-left">
+              <label class="control-label requiredField" for="add_subtask_description">Subtask description</label>
+            </div>
+            <div class="col-sm-8">
+              <textarea id="add_subtask_description" class="form-control" name="subtask_description" rows="5"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group row justify-content-sm-center text-left">
+            <div class="col-sm-4 text-left">
+              <label class="control-label requiredField" for="add_subtask_sd">Start Date<span class="asteriskField">*</span></label>
+            </div>
+            <div class="col-sm-8">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                </div>
+                <input required autocomplete="off" class="form-control" id="add_subtask_sd" name="subtask_SD" placeholder="YYYY-MM-DD" type="text"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row justify-content-sm-center text-left">
+            <div class="col-sm-4 text-left">
+              <label class="control-label requiredField" for="add_subtask_dd">Due Date<span class="asteriskField">*</span></label>
+            </div>
+            <div class="col-sm-8">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                </div>
+                <input required autocomplete="off" class="form-control" id="add_subtask_dd" name="subtask_DD" placeholder="YYYY-MM-DD" type="text"/>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group row justify-content-sm-center text-left">
+            <div class="col-sm-4 text-left">
+              <label class="control-label requiredField" for="add_subtask_priorities">Priorities</label>
+            </div>
+            <div class="col-sm-8">
+              <select class="form-control" id="add_subtask_priorities" name="subtask_priority">
+                  {% for priority in priorities %}
+                  <option value="{{ priority.Id }}">{{ priority.Name }}</option>
+                  {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row justify-content-sm-center text-left">
+            <div class="col-sm-4 text-left">
+              <label class="control-label requiredField" for="add_subtask_task">Task name</label>
+            </div>
+            <div class="col-sm-8">
+              <select class="form-control" id="add_subtask_task" name="subtask_task">
+                {% for task in t_tasks %}
+                  <option value="{{ task.Id }}">{{ task.Name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-primary" type="submit">Add</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}
