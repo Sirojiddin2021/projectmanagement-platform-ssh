@@ -17,7 +17,9 @@ from flask_wtf.csrf import CSRFProtect
 from initialization import *    #init, engine, Users
 
 from forms import *   #RegForm, LoginForm, AddInfo
-from wtforms.validators import ValidationError
+
+from wtforms import StringField, PasswordField, BooleanField, TextAreaField, DateField, DateTimeField, SubmitField, FloatField, IntegerField
+from wtforms.validators import DataRequired, Length, Email, NumberRange, InputRequired, EqualTo, ValidationError
 
 from sqlalchemy.sql import text, column
 from sqlalchemy import update, or_
