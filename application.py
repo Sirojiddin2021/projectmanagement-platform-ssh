@@ -475,7 +475,7 @@ def projects(Id):
 
         return redirect("/{}/projects".format(Id))
 
-    return render_template("user/projects/edit/projects.html", form=form, st_form=st_form, t_projects=t_projects, all_user_sections=all_user_sections, t_tasks=t_tasks, priorities=priorities, t_subtasks=t_subtasks, user_sections=user_sections)
+    return render_template("user/projects.html", form=form, st_form=st_form, t_projects=t_projects, all_user_sections=all_user_sections, t_tasks=t_tasks, priorities=priorities, t_subtasks=t_subtasks, user_sections=user_sections)
 
 
 #------------------------------------------------------------------------------------- delete projects
