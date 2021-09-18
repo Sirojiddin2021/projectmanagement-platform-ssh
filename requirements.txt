@@ -11,3 +11,4 @@ datetime
 flask_session==0.4.0
 flask_mail==0.9.1
 flask_wtf==0.15.1
+sqlalchemy==1.4.23
