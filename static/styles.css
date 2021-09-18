@@ -1,1 +1,110 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
 
+/* Colors for brand */
+nav .navbar-brand .blue
+{
+    color: #537fbe;
+}
+nav .navbar-brand .red
+{
+    color: #ea433b;
+}
+nav .navbar-brand .yellow
+{
+    color: #f5b82e;
+}
+nav .navbar-brand .green
+{
+    color: #2e944b;
+}
+
+
+main
+{
+    /* Scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* Center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* Constrain images on small screens */
+    max-width: 100%;
+}
+
+.ripple-surface {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+
+table{
+    width: 100%;
+    margin: 40px auto;
+    box-shadow: 0px 4px 20px rgba(5, 57, 94, .5);
+    -moz-box-shadow: 0px 4px 20px rgba(5, 57, 94, .5);
+    -webkit-box-shadow: 0px 4px 20px rgba(5, 57, 94, .5);
+}
+
+@media screen and (max-width: 767px){
+	.table thead{
+		display: none;
+	}
+	.table{
+	    padding: 0 10px;
+	}
+	.table tbody{
+	    padding: 0 10px;
+	}
+
+	.table tbody, .table tbody tr{
+		display: block;
+		width: 100%;
+	}
+	.table tbody tr th::before, .table tbody tr td::before{
+	    content: attr(data-label);
+	    display: block;
+	}
+	.table tbody tr td{
+	    display: block;
+	    width: 100%;
+	    float: left;
+	}
+	.table tbody tr th{
+	    display: block;
+	    width: 100%;
+	    float: left;
+	}
+	.table tbody tr{
+	    margin-bottom: 15px;
+	    float: left;
+	    clear: both;
+	    box-shadow: 0px 4px 20px rgba(5, 57, 94, .5);
+        -moz-box-shadow: 0px 4px 20px rgba(5, 57, 94, .5);
+        -webkit-box-shadow: 0px 4px 20px rgba(5, 57, 94, .5);
+	}
+	.table td{
+		text-align: right;
+		padding-left: 50%;
+		text-align: right;
+		position: relative;
+	}
+	.table td::before{
+		content: attr(data-label);
+		position: absolute;
+		left:0;
+		width: 50%;
+		padding-left:5px;
+		font-size:15px;
+		font-weight: bold;
+		text-align: left;
+	}
+}
