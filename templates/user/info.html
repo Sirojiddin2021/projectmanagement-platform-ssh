@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    User info
+{% endblock %}
+
+{% block main %}
+
+
+<div class="content-section">
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Account information</legend>
+        <form action="/{{ session.user_id}}/userinfo" method="POST">
+
+        {{ form.hidden_tag() }}
+
+             <div class="form-group row justify-content-md-center text-left">
+                <div class="col col-sm-2 text-left">
+                    <label class="form-label" for="_firstname">Firstname:</label>
+                </div>
+                <div class="col-sm-3">
+                    <input autocomplete="off" class="form-control" id="_firstname" name="firstname" type="text" value="{{ userdata.Firstname }}">
+                </div>
+            </div>
+
+            <div class="form-group row justify-content-md-center text-left">
+                <div class="col col-sm-2 text-left">
+                    <label class="form-label" for="_lastname">Lastname:</label>
+                </div>
+                <div class="col-sm-3">
+                    <input autocomplete="off" class="form-control" id="_lastname" name="lastname" type="text" value="{{ userdata.Lastname }}">
+                </div>
+            </div>
+
+            <div class="form-group row justify-content-md-center text-left">
+                <div class="col col-sm-2 text-left">
+                    <label class="form-label" for="_role">Role:</label>
+                </div>
+                <div class="col-sm-3">
+                    <input autocomplete="off" list="positions" class="form-control" id="_role" name="role" type="text" value="{{ userdata.Role }}">
+                    <datalist id="positions">
+                        {% for role in roles %}
+                        <option value="{{ role.Name }}">
+                        {% endfor %}
+                   </datalist>
+                </div>
+            </div>
+
+            <div class="form-group row justify-content-md-center text-left">
+                <div class="col col-sm-2 text-left">
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-check">
+                        {% if userdata.Project_manager %}
+                        <input class="form-check-input" type="checkbox" name="pm" id="_pm" checked>
+                        <label class="form-check-label" for="_pm">I am a project manager!</label>
+                        {% else %}
+                        <input class="form-check-input" type="checkbox" name="pm" id="_pm">
+                        <label class="form-check-label" for="_pm">If you are project manager, please select this!</label>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row justify-content-md-center text-left">
+                <div class="col col-sm-2 text-left">
+                    <label class="form-label" for="_phone">Phone:</label>
+                </div>
+                <div class="col-sm-3">
+                    <input autocomplete="off" class="form-control" id="_phone" name="phone" type="text" value="{{ userdata.Phone }}">
+                </div>
+            </div>
+
+            <div class="form-group row justify-content-md-center text-left">
+                <div class="col col-sm-2 text-left">
+                    <label class="form-label" for="_rate">Rate:</label>
+                </div>
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        <input autocomplete="off" class="form-control text-right" id="_rate" name="rate" placeholder="Your rate" type="number" value="{{ userdata.Rate }}">
+                        <span class="input-group-text">$</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row justify-content-md-center text-left">
+                <div class="col col-sm-2 text-left">
+                    <label class="form-label" for="_About">About:</label>
+                </div>
+                <div class="col-sm-3">
+                    <textarea class="form-control" id="_about" name="about" rows="4">{{ userdata.About }}</textarea>
+                </div>
+            </div>
+
+            <small id="alertmsg" class="form-text text-muted">We'll never share your personal details with anyone else.</small>
+            <button class="btn btn-primary" type="submit">Update</button>
+        </form>
+    </fieldset>
+</div>
+
+
+
+
+
+{% endblock %}
