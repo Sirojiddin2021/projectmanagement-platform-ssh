@@ -10,3 +10,4 @@ requests==2.7.0
 datetime
 flask_session==0.4.0
 flask_mail==0.9.1
+flask_wtf==0.15.1
