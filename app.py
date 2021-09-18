@@ -65,13 +65,10 @@ dbsession = SessionDB()
 
 #--------------------------------------------------------- Forms (User registration form)  -------------------------------------------------------#
 class RegForm(FlaskForm):
-    username = StringField('Username',
-                           validators=[DataRequired(), Length(min=5, max=20)])
-    email = StringField('Email',
-                        validators=[DataRequired(), Email()])
+    username = StringField('Username', validators=[DataRequired(), Length(min=5, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=5, max=80)])
-    confirm_password = PasswordField('Confirm Password',
-                                     validators=[DataRequired(), EqualTo('password')])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
@@ -87,8 +84,7 @@ class RegForm(FlaskForm):
 
 #--------------------------------------------------------- Forms (User request password reset form)  ---------------------------------------------#
 class RequestResetForm(FlaskForm):
-    email = StringField('Email',
-                        validators=[DataRequired(), Email()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Send Reset Link')
 
     def validate_email(self, email):
