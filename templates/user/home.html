@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+
+<div class="accordion" id="accordion_id">
+  {% for section in usersections %}
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="heading-{{ section.Id }}">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ section.Id }}" aria-expanded='false' aria-controls="collapse-{{ section.Id }}">
+        {{ section.Name }}<br>
+        {{ section.Description }}
+      </button>
+    </h2>
+      <div id="collapse-{{ section.Id }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ section.Id }}">
+        <div class="accordion-body">
+          <div class="row text-center g-2">
+
+          {% for project in userprojects %}
+            {% if project.Section_ID == section.Id %}
+                <div class="col-sm-3">
+                  <div class="card border border-info" style="max-width: 15rem;">
+                    <div class="card-header">{{ project.Name }}</div>
+                    <div class="card-body text-center">
+                      <h5 class="card-title">Team</h5>
+                      <p class="card-text"><a href="#">@{{ project.Username }}</a></p>
+                    </div>
+                  </div>
+                </div>
+            {% endif %}
+          {% endfor %}
+
+          </div>
+        </div>
+      </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
