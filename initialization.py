@@ -302,6 +302,8 @@ class Projects(Base):
     DD = Column('planned_end_date', Date)
     ActualSD = Column('actual_start_date', Date)
     ActualED = Column('actual_end_date', Date)
+    SectionID = Column('section_id', Integer, ForeignKey('sections.id', ondelete='SET NULL'))
+    UserID = Column('user_id', Integer, ForeignKey('users.id', ondelete='SET NULL'))
     RDT = Column('recorded_datetime', DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     """
@@ -318,27 +320,6 @@ PRIMARY KEY (id)
 
     """
 
-class ProjectSections(Base):
-    __tablename__ = "project_sections"
-    Id = Column('id', Integer, primary_key=True)
-
-    SectionID = Column('section_id', Integer, ForeignKey('sections.id', ondelete='SET NULL'))
-    ProjectID = Column('project_id', Integer, ForeignKey('projects.id', ondelete='SET NULL'))
-    UserID = Column('user_id', Integer, ForeignKey('users.id', ondelete='SET NULL'))
-    RDT = Column('recorded_datetime', DateTime, server_default=str(datetime.now()))
-
-    """
-    CREATE TABLE project_sections (
-id INTEGER NOT NULL,
-section_id INTEGER,
-project_id INTEGER,
-user_id INTEGER,
-PRIMARY KEY (id),
-FOREIGN KEY(section_id) REFERENCES sections (id) ON DELETE SET NULL,
-FOREIGN KEY(project_id) REFERENCES projects (id) ON DELETE SET NULL,
-FOREIGN KEY(user_id) REFERENCES users (id) ON DELETE SET NULL
-)
-    """
 
 class ProjectMessages(Base):
     __tablename__ = "project_messages"
@@ -388,7 +369,6 @@ class Tasks(Base):
 class Priorities(Base):
     __tablename__ = "priorities"
     Id = Column('id', Integer, primary_key=True)
-
     Name = Column('name', String(10))
 
 
@@ -399,7 +379,6 @@ class Priorities(Base):
 class Roles(Base):
     __tablename__ = "roles"
     Id = Column('id', Integer, primary_key=True)
-
     Name = Column('name', String(50))
 
 
