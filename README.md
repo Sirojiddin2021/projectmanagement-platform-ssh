@@ -3,6 +3,7 @@
 #### Description:
 This is Project Management website (flask application)
 Website works with single user task management, there is no link between users. In the future I would like to multiuser user messages, create teams, assign tasks, exchange files. Furthermore, in addition to above I will add due date notifications, progress bar, users performances and telegram bot notifications!
+project.db has future tables that will be used in the future to add more functions.
 
 **app.py** contains below functions:
 1. User registration:
