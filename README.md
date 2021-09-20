@@ -1,4 +1,4 @@
-# YOUR PROJECT TITLE
+# PROJECT MANAGEMENT PLATFORM (PMP) FLASK APPLICATION
 #### Video Demo:  <https://youtu.be/82TMmYFpP6I>
 #### Description:
 This is Project Management website (flask application)
