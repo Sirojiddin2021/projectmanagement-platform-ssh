@@ -70,23 +70,23 @@ As I mentioned above this website need to update/improve for the multiusers. Pos
 #How to launch application
 Requirements table:
 
-	*Flask==1.0.2*
-	*itsdangerous==1.1.0*
-	*Jinja2==2.10*
-	*MarkupSafe==1.1.0*
-	*requests==2.7.0*
-	*pyTelegramBotAPI==3.8.2*
-	*Werkzeug==0.14.1*
-	*requests==2.7.0*
-	*datetime*
-	*flask_session==0.4.0*
-	*flask_mail==0.9.1*
-	*flask_wtf==0.15.1*
-	*sqlalchemy==1.4.23*
-	*validators==0.18.2*
-	*email_validator==1.1.3*
-	*gunicorn==19.9.0*
-    *Click==7.0*
+	Flask==1.0.2
+	itsdangerous==1.1.0
+	Jinja2==2.10
+	MarkupSafe==1.1.0
+	requests==2.7.0
+	pyTelegramBotAPI==3.8.2
+	Werkzeug==0.14.1
+	requests==2.7.0
+	datetime
+	flask_session==0.4.0
+	flask_mail==0.9.1
+	flask_wtf==0.15.1
+	sqlalchemy==1.4.23
+	validators==0.18.2
+	email_validator==1.1.3
+	gunicorn==19.9.0
+    	Click==7.0
 
 
 1.	This website already running on Heroku. Please follow the link <https://projectmanagement-platform.herokuapp.com/>
