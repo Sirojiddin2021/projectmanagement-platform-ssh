@@ -4,7 +4,7 @@
 #### Heroku: <https://projectmanagement-platform.herokuapp.com/>
 #### Description:
 This is Project Management website (flask application)
-Up to now, website works with single user, there is no link between users. In the future I would like to add user messages, create teams, assign tasks for not only users also for teams. Furthermore, due date notifications, progress bar and users performances
+Up to now, website works with single user, there is no link between users. In the future I would like to add user messages, create teams, assign tasks for not only users also for teams. Furthermore, I will add due date notifications, progress bar and users performances
 
 **app.py** contains below functions:
 1. User registration:
