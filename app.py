@@ -265,8 +265,8 @@ def userinfo(Id):
 @login_required
 def home(Id):
     """ home page """
-    all_sections = dbsession.query(Sections).filter(or_(Sections.UserID==Id)|(Sections.Permanent==True)).all()
-    all_projects = dbsession.query(Projects.Name, Projects.Description, Projects.SD, Projects.DD, Sections.Name.label("Section_name"), Sections.Id.label("Section_ID"), Users.Username.label("Username")).join(Sections, Sections.Id==Projects.SectionID).join(Users,Users.Id==Id).where(Projects.UserID==Id).all()
+    all_sections = dbsession.query(Sections).filter(or_(Sections.UserID==session["user_id"])|(Sections.Permanent==True)).all()
+    all_projects = dbsession.query(Projects.Name, Projects.Description, Projects.SD, Projects.DD, Sections.Name.label("Section_name"), Sections.Id.label("Section_ID"), Users.Username.label("Username")).join(Sections, Sections.Id==Projects.SectionID).join(Users,Users.Id==Projects.UserID).where(Projects.UserID==session["user_id"]).all()
     return render_template("user/home.html", usersections=all_sections, userprojects=all_projects)
 
 #--------------------------------------------------------------------------------------- Home page -------------------------------------------------#
