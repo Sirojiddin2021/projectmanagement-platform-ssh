@@ -223,12 +223,12 @@ def register():
 
             # send confirmation email
             token = s.dumps(user.Email, salt='email-confirm')
-            msg = Message('Please confirm your email', sender='sirojiddin.shodiev@gmail.com', recipients=[user.Email])
+            msg = Message('Please confirm your email', sender='pm.infobot@gmail.com', recipients=[user.Email])
             link = url_for('confirm_email', Id=query.Id, token=token, _external=True)
             msg.body = 'Welcome! Thanks for signing up. Please follow this link to activate your account {}'.format(link)
             mail.send(msg)
 
-            return redirect("/{}/userinfo".format(query.Id))
+            return redirect("/{}/userinfo".format(session["user_id"]))
         return render_template("/user/register.html", form=form)
 
 
@@ -242,7 +242,7 @@ def userinfo(Id):
     """ User update function """
 
     form = AddInfo()
-    user = dbsession.query(Users).filter(Users.Id==Id).first()
+    user = dbsession.query(Users).filter(Users.Id==session["user_id"]).first()
     roles = dbsession.query(Roles).all()
 
     if form.validate_on_submit():
@@ -255,8 +255,7 @@ def userinfo(Id):
         user.About = form.about.data
         user.Project_manager = form.pm.data
         dbsession.commit()
-        session["user_id"] = user.Id
-        return redirect("/{}/home".format(user.Id))
+        return redirect("/{}/home".format(session["user_id"]))
 
     return render_template("/user/info.html", form=form, userdata=user, roles=roles)
 
@@ -379,12 +378,12 @@ def index():
 def sections(Id):
     """ Add sections """
     form = SectionAddForm()
-    u_sections = dbsession.query(Sections.Id, Sections.Name, Sections.Description, Sections.RDT).join(Users, Users.Id==Sections.UserID).where(Sections.UserID==Id).all()
+    u_sections = dbsession.query(Sections.Id, Sections.Name, Sections.Description, Sections.RDT).join(Users, Users.Id==Sections.UserID).where(Sections.UserID==session["user_id"]).all()
     if form.validate_on_submit():
         new_section = Sections(
             Name = form.section_name.data,
             Description = form.section_description.data,
-            UserID = Id
+            UserID = session["user_id"]
             )
 
         dbsession.add(new_section)
@@ -400,7 +399,7 @@ def delete_section(Id, sec_id):
     section = dbsession.query(Sections).join(Users, Users.Id==Sections.UserID).filter(Sections.Id==sec_id).first()
     dbsession.delete(section)
     dbsession.commit()
-    return redirect("/{}/projects".format(Id))
+    return redirect("/{}/projects".format(session["user_id"]))
 
 #----------------------------------------------------------------------------------- edit section
 @app.route("/<string:Id>/section/edit/<string:sec_id>", methods=["GET","POST"])
@@ -416,7 +415,7 @@ def edit_section(Id, sec_id):
 
         dbsession.commit()
 
-    return redirect("/{}/projects".format(Id))
+    return redirect("/{}/projects".format(session["user_id"]))
 
 
 
@@ -430,19 +429,19 @@ def projects(Id):
     st_form = SubtaskEditForm()
 
     # table user projects
-    t_projects = dbsession.query(Projects.Id, Projects.Name, Projects.Description, Projects.SD, Projects.DD, Sections.Id.label("Section_id"), Sections.Name.label("Section_name")).join(Sections, Sections.Id==Projects.SectionID).where(Projects.UserID==Id).all()
+    t_projects = dbsession.query(Projects.Id, Projects.Name, Projects.Description, Projects.SD, Projects.DD, Sections.Id.label("Section_id"), Sections.Name.label("Section_name")).join(Sections, Sections.Id==Projects.SectionID).where(Projects.UserID==session["user_id"]).all()
     # user sections including default
-    all_user_sections = dbsession.query(Sections).filter(or_(Sections.UserID==Id)|(Sections.Name=='Default')).all()
+    all_user_sections = dbsession.query(Sections).filter(or_(Sections.UserID==session["user_id"])|(Sections.Name=='Default')).all()
 
     # user custom sections only
-    user_sections = dbsession.query(Sections.Id, Sections.Name, Sections.Description, Sections.RDT).join(Users, Users.Id==Sections.UserID).where(Sections.UserID==Id).all()
+    user_sections = dbsession.query(Sections.Id, Sections.Name, Sections.Description, Sections.RDT).join(Users, Users.Id==Sections.UserID).where(Sections.UserID==session["user_id"]).all()
 
 
     # user tasks
-    t_tasks = dbsession.query(Tasks.Id, Tasks.Name, Tasks.Description, Tasks.SD, Tasks.DD, Tasks.ProjectID, Tasks.PriorityID, Priorities.Name.label("Priority_name"), Projects.Name.label("Project_name")).join(Priorities, Priorities.Id==Tasks.PriorityID).join(Projects, Projects.Id==Tasks.ProjectID).where(Tasks.Recorder==Id).all()
+    t_tasks = dbsession.query(Tasks.Id, Tasks.Name, Tasks.Description, Tasks.SD, Tasks.DD, Tasks.ProjectID, Tasks.PriorityID, Priorities.Name.label("Priority_name"), Projects.Name.label("Project_name")).join(Priorities, Priorities.Id==Tasks.PriorityID).join(Projects, Projects.Id==Tasks.ProjectID).where(Tasks.Recorder==session["user_id"]).all()
 
     # user subtasks
-    t_subtasks = dbsession.query(Subtasks.Id, Subtasks.Name, Subtasks.Description, Subtasks.SD, Subtasks.DD, Subtasks.PriorityID, Priorities.Name.label("Priority_name"), Tasks.Id.label('Task_id'), Tasks.Name.label("Task_name"), Projects.Name.label("Project_name")).join(Priorities, Priorities.Id==Subtasks.PriorityID).join(Tasks, Tasks.Id==Subtasks.TaskID).join(Projects, Projects.Id==Tasks.ProjectID).where(Subtasks.Recorder==Id).all()
+    t_subtasks = dbsession.query(Subtasks.Id, Subtasks.Name, Subtasks.Description, Subtasks.SD, Subtasks.DD, Subtasks.PriorityID, Priorities.Name.label("Priority_name"), Tasks.Id.label('Task_id'), Tasks.Name.label("Task_name"), Projects.Name.label("Project_name")).join(Priorities, Priorities.Id==Subtasks.PriorityID).join(Tasks, Tasks.Id==Subtasks.TaskID).join(Projects, Projects.Id==Tasks.ProjectID).where(Subtasks.Recorder==session["user_id"]).all()
 
     # all priorities
     priorities = dbsession.query(Priorities).all()
@@ -455,13 +454,13 @@ def projects(Id):
             SD = form.project_SD.data,
             DD = form.project_DD.data,
             SectionID = form.project_section.data,
-            UserID = Id
+            UserID = session["user_id"]
             )
 
         dbsession.add(new_project)
         dbsession.commit()
 
-        return redirect("/{}/projects".format(Id))
+        return redirect("/{}/projects".format(session["user_id"]))
 
     return render_template("user/projects.html", form=form, st_form=st_form, t_projects=t_projects, all_user_sections=all_user_sections, t_tasks=t_tasks, priorities=priorities, t_subtasks=t_subtasks, user_sections=user_sections)
 
@@ -494,7 +493,7 @@ def edit_project(Id, project_id):
         project.SectionID = form.e_project_section.data
         dbsession.commit()
 
-    return redirect("/{}/projects".format(Id))
+    return redirect("/{}/projects".format(session["user_id"]))
 
 
 # ---------------------------------------------------------------------------------- Tasks --------------------------------------------------------------------------------------------------------------------#
@@ -504,9 +503,9 @@ def edit_project(Id, project_id):
 def tasks(Id):
     """ Add tasks """
     form = TaskAddForm()
-    u_tasks = dbsession.query(Tasks.Id, Tasks.Name, Tasks.Description, Tasks.SD, Tasks.DD, Tasks.ProjectID, Tasks.PriorityID, Priorities.Name.label("Priority_name"), Projects.Name.label("Project_name")).join(Priorities, Priorities.Id==Tasks.PriorityID).join(Projects, Projects.Id==Tasks.ProjectID).where(Tasks.Recorder==Id).all()
+    u_tasks = dbsession.query(Tasks.Id, Tasks.Name, Tasks.Description, Tasks.SD, Tasks.DD, Tasks.ProjectID, Tasks.PriorityID, Priorities.Name.label("Priority_name"), Projects.Name.label("Project_name")).join(Priorities, Priorities.Id==Tasks.PriorityID).join(Projects, Projects.Id==Tasks.ProjectID).where(Tasks.Recorder==session["user_id"]).all()
 
-    u_projects = dbsession.query(Projects).filter(Projects.UserID==Id).all()
+    u_projects = dbsession.query(Projects).filter(Projects.UserID==session["user_id"]).all()
     priorities = dbsession.query(Priorities).all()
 
     if form.validate_on_submit():
@@ -518,13 +517,13 @@ def tasks(Id):
             DD = form.task_DD.data,
             ProjectID = form.task_project.data,
             PriorityID = form.task_priority.data,
-            Recorder = Id
+            Recorder = session["user_id"]
             )
 
         dbsession.add(new_task)
         dbsession.commit()
 
-    return redirect("/{}/projects".format(Id))
+    return redirect("/{}/projects".format(session["user_id"]))
 
 
 #---------------------------------------------------------------------------------- delete tasks
@@ -536,7 +535,7 @@ def delete_tasks(Id, task_id):
     dbsession.delete(task)
     dbsession.commit()
 
-    return redirect("/{}/projects".format(Id))
+    return redirect("/{}/projects".format(session["user_id"]))
 
 
 #----------------------------------------------------------------------------------- edite tasks
@@ -554,10 +553,10 @@ def edit_task(Id, task_id):
         task.DD = form.e_task_DD.data
         task.ProjectID = form.e_task_project.data
         task.PriorityID = form.e_task_priority.data
-        task.Recorder = Id
+        task.Recorder = session["user_id"]
         dbsession.commit()
 
-    return redirect("/{}/projects".format(Id))
+    return redirect("/{}/projects".format(session["user_id"]))
 
 
 
@@ -568,9 +567,9 @@ def edit_task(Id, task_id):
 def subtasks(Id):
     """ Add subtasks """
     form = SubtaskAddForm()
-    u_subtasks = dbsession.query(Subtasks.Id, Subtasks.Name, Subtasks.Description, Subtasks.SD, Subtasks.DD, Subtasks.PriorityID, Priorities.Name.label("Priority_name"), Tasks.Id.label('Task_id'), Tasks.Name.label("Task_name"), Projects.Name.label("Project_name")).join(Priorities, Priorities.Id==Subtasks.PriorityID).join(Tasks, Tasks.Id==Subtasks.TaskID).join(Projects, Projects.Id==Tasks.ProjectID).where(Subtasks.Recorder==Id).all()
+    u_subtasks = dbsession.query(Subtasks.Id, Subtasks.Name, Subtasks.Description, Subtasks.SD, Subtasks.DD, Subtasks.PriorityID, Priorities.Name.label("Priority_name"), Tasks.Id.label('Task_id'), Tasks.Name.label("Task_name"), Projects.Name.label("Project_name")).join(Priorities, Priorities.Id==Subtasks.PriorityID).join(Tasks, Tasks.Id==Subtasks.TaskID).join(Projects, Projects.Id==Tasks.ProjectID).where(Subtasks.Recorder==session["user_id"]).all()
 
-    u_tasks = dbsession.query(Tasks).filter(Tasks.Recorder==Id).all()
+    u_tasks = dbsession.query(Tasks).filter(Tasks.Recorder==session["user_id"]).all()
     priorities = dbsession.query(Priorities).all()
 
     if form.validate_on_submit():
@@ -582,13 +581,13 @@ def subtasks(Id):
             DD = form.subtask_DD.data,
             TaskID = form.subtask_task.data,
             PriorityID = form.subtask_priority.data,
-            Recorder = Id
+            Recorder = session["user_id"]
             )
 
         dbsession.add(new_subtask)
         dbsession.commit()
 
-    return redirect("/{}/projects".format(Id))
+    return redirect("/{}/projects".format(session["user_id"]))
 
 
 #--------------------------------------------------------------------------------------- delete subtasks
@@ -600,7 +599,7 @@ def delete_subtasks(Id, subtask_id):
     dbsession.delete(subtask)
     dbsession.commit()
 
-    return redirect("/{}/projects".format(Id))
+    return redirect("/{}/projects".format(session["user_id"]))
 
 
 #----------------------------------------------------------------------------------------- edite subtasks
@@ -618,11 +617,11 @@ def edit_subtask(Id, subtask_id):
         subtask.EDT = form.e_subtask_DD.data
         subtask.TaskID = form.e_subtask_task.data
         subtask.PriorityID = form.e_subtask_priority.data
-        subtask.Recorder = Id
+        subtask.Recorder = session["user_id"]
         dbsession.commit()
 
 
-    return redirect("/{}/projects".format(Id))
+    return redirect("/{}/projects".format(session["user_id"]))
 
 
 # --------------------------------------------------------------------------- Error handler ---------------------------------------------------------------
