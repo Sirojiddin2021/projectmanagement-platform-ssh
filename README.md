@@ -7,14 +7,26 @@ Up to now, website works with single user, there is no link between users. In th
 **app.py** contains below functions:
 1. User registration:
   - RegForm > User registration form
-  - RequestResetForm
-3. Email confirmation
-4. Password reset
-5. Create/Update/Delete Sections
-6. Create/Update/Delete Projects
-7. Create/Update/Delete Tasks
-8. Create/Update/Delete Subtasks
-9. Form validation
+  - RequestResetForm > Send email link to reset password
+  - confirm_email > Email confirmation (token) function/route 
+  - login/logout > Login and logout functions/routes using session
+  - reset_request > Password reset (token) function
+  - userinfo > User additional information
+3. home > user dashboard page/route
+4. index > index page or main page
+5. sections > add new section function/route
+  - delete_section > delete section function/route
+  - edit_section > update/edit section function/route
+6. projects > add new projects funtion/route
+  - delete_project > delete projects function/route
+  - edit_project > update/edit project function/route
+7. tasks > add new task function/route
+  - delete_task > delete task function/route
+  - edit_task > update/edit task function/route
+8. subtasks > add new subtask function/route
+  - delete_subtask > delete subtask function/route
+  - edit_subtask > update/edit subtask function/route
+9. Error handlers
 
 **forms.py** contains form validations
 
