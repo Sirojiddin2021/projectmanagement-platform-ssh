@@ -18,7 +18,7 @@ Technologies used:
 -	other small libraries or packages
 
 
-####How the webpage works?
+#### How the webpage works?
 The idea is simple. The user can register through registration form. During registration user need to provide correct information (email) is important:
 -	Username [min=5 symbols, max=50 symbols]
 -	Email
@@ -52,13 +52,13 @@ Users cannot access to others tasks or projects. This function will be added nex
 -	Create user performances
 -	Create task collaborators
 
-####Sessions
+#### Sessions
 Each route checks if the user is authenticated through login page (login_required) function and updates session[“user_id”] parameter to users id. If user closes the page and returns to the same page, website will store that session for a while.
-####Routing
+#### Routing
 In each route there is user id first and section, project, task or subtask id will be added. User cannot change user session so sql injection not possible.
-####Database
+#### Database
 Database created through “create_engine” if database not exists in the project folder, then it will create new one and fills with required information. To connect with database and commit all queries “sessionmaker” is used. With sqlalchemy all sqlite3 queries become easy and readable. And I figure out that sqlalchemy does not support full join function and currently version limiting with join (INNER JOIN).
-####Possible improvements
+#### Possible improvements
 As I mentioned above this website need to update/improve for the multiusers. Possible improvements:
 -	Create teams
 -	Create companies
@@ -70,7 +70,7 @@ As I mentioned above this website need to update/improve for the multiusers. Pos
 -	Link with telegram bots, sms services for notification purposes
 -	other
 
-####How to launch application
+#### How to launch application
 Requirements table:
 
 	Flask==1.0.2
