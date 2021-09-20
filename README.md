@@ -1,5 +1,5 @@
 # PROJECT MANAGEMENT PLATFORM (PMP) FLASK APPLICATION
-#### Video Demo:  <https://youtu.be/hBQf28xJx-g>
+#### Video Demo:  <https://youtu.be/y4hsJLUsqPg>
 #### Github Link: <https://github.com/Sirojiddin2021/projectmanagement-platform-ssh>
 #### Heroku: <https://projectmanagement-platform.herokuapp.com/>
 #### Description:
