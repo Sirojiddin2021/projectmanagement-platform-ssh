@@ -18,4 +18,4 @@ forms.py contains: Forms validation
 
 initialization.py contains: declarative_base, all database create queries(models)
 
-project.db database file
+**project.db** database file
