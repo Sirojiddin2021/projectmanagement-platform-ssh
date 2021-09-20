@@ -5,32 +5,34 @@
 #### Description:
 This project is website based where users can automate their projects and tasks. The website user friendly and simple, where no additional training required. In the beginning, I wanted to create a project like ASANA asana.com to expand my knowledge and learn python programming very deeply and also database management, where I can utilize all my learning during the course .
 Technologies used:
-•	Flask
-•	JS
-•	flask_session
-•	sqlalchemy
-•	werkzeug.security
-•	wtforms.validators
-•	declarative_base
-•	sessionmaker
-•	URLSafeTimedSerializer
-•	SignatureExpired
-•	other small libraries or packages
+-	Flask
+-	JS
+-	flask_session
+-	sqlalchemy
+-	werkzeug.security
+-	wtforms.validators
+-	declarative_base
+-	sessionmaker
+-	URLSafeTimedSerializer
+-	SignatureExpired
+-	other small libraries or packages
+
 
 #How the webpage works?
 The idea is simple. The user can register through registration form. During registration user need to provide correct information (email) is important:
-•	Username [min=5 symbols, max=50 symbols]
-•	Email
-•	Password [min=5 symbols, max=80 symbols], before saving to database, password data hashes with generate_password_hash() then stores hashed data into database
-•	After registration email confirmation link will be sent to new user and he/she must confirm through confirmation token link. Link expires in one hour.
+-	Username [min=5 symbols, max=50 symbols]
+-	Email
+-	Password [min=5 symbols, max=80 symbols], before saving to database, password data hashes with generate_password_hash() then stores hashed data into database
+-	After registration email confirmation link will be sent to new user and he/she must confirm through confirmation token link. Link expires in one hour.
 
 After the registration, the user will be redirected to fill additional information like,
-•	Firstname
-•	Lastname
-•	Role
-•	Rate per/hour
-•	About
-•	And checkbox need to click if user is project manager
+-	Firstname
+-	Lastname
+-	Role
+-	Rate per/hour
+-	About
+-	And checkbox need to click if user is project manager
+
 
 After completing all user will be redirected to home page, where user can see four permanent sections
 -	Tasks Due Soon
@@ -58,15 +60,16 @@ In each route there is user id first and section, project, task or subtask id wi
 Database created through “create_engine” if database not exists in the project folder, then it will create new one and fills with required information. To connect with database and commit all queries “sessionmaker” is used. With sqlalchemy all sqlite3 queries become easy and readable. And I figure out that sqlalchemy does not support full join function and currently version limiting with join (INNER JOIN).
 #Possible improvements
 As I mentioned above this website need to update/improve for the multiusers. Possible improvements:
-•	Create teams
-•	Create companies
-•	Payment option
-•	Workhour calculation
-•	Manhour calculation
-•	User performances
-•	Task notifications
-•	Link with telegram bots, sms services for notification purposes
-•	other
+-	Create teams
+-	Create companies
+-	Payment option
+-	Workhour calculation
+-	Manhour calculation
+-	User performances
+-	Task notifications
+-	Link with telegram bots, sms services for notification purposes
+-	other
+
 #How to launch application
 Requirements table:
 
