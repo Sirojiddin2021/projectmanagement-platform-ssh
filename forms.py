@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, TextAreaField, DateField, DateTimeField, SubmitField, FloatField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, NumberRange, InputRequired, EqualTo
-from initialization import *    #init, engine, Users
-from app import *
-#--------- User -----------------------------------------------
+from initialization import *
+from application import *
+
 
 # reset password form
+
 
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('New Password', validators=[DataRequired()])
@@ -14,6 +15,8 @@ class ResetPasswordForm(FlaskForm):
 
 
 # login form
+
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=5, max=50)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=5, max=80)])
@@ -21,6 +24,8 @@ class LoginForm(FlaskForm):
 
 
 # for user update
+
+
 class AddInfo(FlaskForm):
     firstname = StringField('firstname')
     lastname = StringField('lastname')
@@ -34,18 +39,25 @@ class AddInfo(FlaskForm):
 # --------------------------------- Sections -------------------------------------------
 
 # Section Form Class
+
+
 class SectionAddForm(FlaskForm):
     section_name = StringField('section_name', validators=[DataRequired(), Length(min=1, max=100)])
     section_description = TextAreaField('section_description', validators=[Length(max=200)])
 
 # Section Form Class
+
+
 class SectionEditForm(FlaskForm):
     e_section_name = StringField('e_section_name', validators=[DataRequired(), Length(min=1, max=100)])
     e_section_description = TextAreaField('e_section_description', validators=[Length(max=200)])
 
+
 # ---------------------------------- Projects --------------------------------------------
 
 # add project from class
+
+
 class ProjectAddForm(FlaskForm):
     project_name = StringField('project_name', validators=[DataRequired(), Length(min=1, max=100)])
     project_description = TextAreaField('project_description', validators=[Length(max=200)])
@@ -54,6 +66,8 @@ class ProjectAddForm(FlaskForm):
     project_section = IntegerField('project_section', validators=[DataRequired()])
 
 # project from class
+
+
 class ProjectEditForm(FlaskForm):
     e_project_name = StringField('e_project_name', validators=[DataRequired(), Length(min=1, max=100)])
     e_project_description = TextAreaField('e_project_description', validators=[Length(max=200)])
@@ -62,9 +76,11 @@ class ProjectEditForm(FlaskForm):
     e_project_section = IntegerField('e_project_section', validators=[DataRequired()])
 
 
-
 # --------------------------------- Tasks --------------------------------------------------
+
 # add task from class
+
+
 class TaskAddForm(FlaskForm):
     task_name = StringField('task_name', validators=[DataRequired(), Length(min=1, max=100)])
     task_description = TextAreaField('task_description', validators=[Length(max=200)])
@@ -75,6 +91,8 @@ class TaskAddForm(FlaskForm):
 
 
 # edit task from class
+
+
 class TaskEditForm(FlaskForm):
     e_task_name = StringField('e_task_name', validators=[DataRequired(), Length(min=1, max=100)])
     e_task_description = TextAreaField('e_description', validators=[Length(max=200)])
@@ -85,7 +103,10 @@ class TaskEditForm(FlaskForm):
 
 
 # --------------------------------- SubTasks --------------------------------------------------
+
 # add subtask from class
+
+
 class SubtaskAddForm(FlaskForm):
     subtask_name = StringField('subtask_name', validators=[DataRequired(), Length(min=1, max=100)])
     subtask_description = TextAreaField('subtask_description', validators=[Length(max=200)])
@@ -96,6 +117,8 @@ class SubtaskAddForm(FlaskForm):
 
 
 # edit subtask from class
+
+
 class SubtaskEditForm(FlaskForm):
     e_subtask_name = StringField('e_subtask_name', validators=[DataRequired(), Length(min=1, max=100)])
     e_subtask_description = TextAreaField('e_subtask_description', validators=[Length(max=200)])
