@@ -1,15 +1,15 @@
 # PROJECT MANAGEMENT PLATFORM (PMP) FLASK APPLICATION
-#### Video Demo:  <https://youtu.be/82TMmYFpP6I>
+#### Video Demo:  <https://youtu.be/hBQf28xJx-g>
+#### Github Link: <https://github.com/Sirojiddin2021/projectmanagement-platform-ssh>
 #### Description:
 This is Project Management website (flask application)
-Website works with single user task management, there is no link between users. In the future I would like to multiuser user messages, create teams, assign tasks, exchange files. Furthermore, in addition to above I will add due date notifications, progress bar, users performances and telegram bot notifications!
-project.db has future tables that will be used in the future to add more functions.
+Up to now, website works with single user, there is no link between users. In the future I would like to add user messages, create teams, assign tasks for not only users also for teams. Furthermore, due date notifications, progress bar and users performances
 
 **app.py** contains below functions:
 1. User registration:
   - *RegForm* > User registration form
   - *RequestResetForm* > Send email link to reset password
-  - *confirm_email* > Email confirmation (token) function/route 
+  - *confirm_email* > Email confirmation (token) function/route
   - *login/logout* > Login and logout functions/routes using session
   - *reset_request* > Password reset (token) function
   - *userinfo* > User additional information
@@ -28,7 +28,9 @@ project.db has future tables that will be used in the future to add more functio
   - *delete_subtask* > delete subtask function/route
   - *edit_subtask* > update/edit subtask function/route
 9. Error handlers
-10. Other files:<br>
-  - **forms.py** contains form validations
-  - **initialization.py** contains database model
-  - **project.db** database file
+10. Other files:
+**forms.py** contains form validations
+
+**initialization.py** contains database model
+
+**project.db** database file

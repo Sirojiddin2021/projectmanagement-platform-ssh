@@ -160,7 +160,7 @@ class Users(Base):
 
     # user personal details
     Username = Column('username', String(50), unique=True, nullable=False)
-    Password = Column('password', String(50), nullable=False)
+    Password = Column('password', String(80), nullable=False)
     Email = Column('email', String(100), unique=True, nullable=False)
     Phone =Column('phone', String(30), server_default='')
     Firstname = Column('firstname', String(50), server_default='')

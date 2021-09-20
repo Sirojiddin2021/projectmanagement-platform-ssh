@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, TextAreaField, DateField, DateTimeField, SubmitField, FloatField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, NumberRange, InputRequired, EqualTo
 from initialization import *    #init, engine, Users
-from app import *
+from application import *
 #--------- User -----------------------------------------------
 
 # reset password form
