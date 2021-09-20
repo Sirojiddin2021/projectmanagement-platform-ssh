@@ -97,7 +97,7 @@ class SubtaskAddForm(FlaskForm):
 
 # edit subtask from class
 class SubtaskEditForm(FlaskForm):
-    e_subtask_name = StringField('e_subtask_name', validators=[DataRequired(), Length(min=1, max=5)])
+    e_subtask_name = StringField('e_subtask_name', validators=[DataRequired(), Length(min=1, max=100)])
     e_subtask_description = TextAreaField('e_subtask_description', validators=[Length(max=200)])
     e_subtask_SD = DateTimeField('e_subtask_SD', format='%Y-%m-%d', validators=[DataRequired()])
     e_subtask_DD = DateTimeField('e_subtask_DD', format='%Y-%m-%d', validators=[DataRequired()])
