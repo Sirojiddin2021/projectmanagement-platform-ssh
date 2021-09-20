@@ -31,6 +31,6 @@ project.db has future tables that will be used in the future to add more functio
 10. Other files:<br>
 **forms.py** contains form validations
 
-**initialization.py** contains database model
+  **initialization.py** contains database model
 
-**project.db** database file
+  **project.db** database file
