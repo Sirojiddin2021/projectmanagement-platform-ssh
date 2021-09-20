@@ -1,5 +1,5 @@
 import os
-import validators
+#import validators
 
 #from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, url_for
@@ -17,9 +17,7 @@ from flask_wtf.csrf import CSRFProtect
 from initialization import *    #init, engine, Users
 
 from forms import *   #RegForm, LoginForm, AddInfo
-
-from wtforms import StringField, PasswordField, BooleanField, TextAreaField, DateField, DateTimeField, SubmitField, FloatField, IntegerField
-from wtforms.validators import DataRequired, Length, Email, NumberRange, InputRequired, EqualTo, ValidationError
+from wtforms.validators import ValidationError
 
 from sqlalchemy.sql import text, column
 from sqlalchemy import update, or_
@@ -35,24 +33,25 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.config['SECRET_KEY'] = 'any secret string'
+#app.config["TEMPLATES_AUTO_RELOAD"] = True
+#app.config['SECRET_KEY'] = 'any secret string'
 
 # Ensure responses aren't cached
+"""
 @app.after_request
 def after_request(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
-
+"""
 
 # Custom filter
-app.jinja_env.filters["usd"] = usd
+#app.jinja_env.filters["usd"] = usd
 
 # Configure session to use filesystem (instead of signed cookies)
-app.config["SESSION_FILE_DIR"] = mkdtemp()
-app.config["SESSION_PERMANENT"] = False
+#app.config["SESSION_FILE_DIR"] = mkdtemp()
+app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = 'Thisissecret'
 CSRFProtect(app)
@@ -267,7 +266,7 @@ def userinfo(Id):
 def home(Id):
     """ home page """
     all_sections = dbsession.query(Sections).filter(or_(Sections.UserID==Id)|(Sections.Permanent==True)).all()
-    all_projects = dbsession.query(Projects.Name, Projects.Description, Projects.SD, Projects.DD, Sections.Name.label("Section_name"), Sections.Id.label("Section_ID"), Users.Username.label("Username")).join(ProjectSections, ProjectSections.ProjectID==Projects.Id).join(Sections, Sections.Id==ProjectSections.SectionID).join(Users,Users.Id==Id).where(ProjectSections.UserID==Id).all()
+    all_projects = dbsession.query(Projects.Name, Projects.Description, Projects.SD, Projects.DD, Sections.Name.label("Section_name"), Sections.Id.label("Section_ID"), Users.Username.label("Username")).join(Sections, Sections.Id==Projects.SectionID).join(Users,Users.Id==Id).where(Projects.UserID==Id).all()
     return render_template("user/home.html", usersections=all_sections, userprojects=all_projects)
 
 #--------------------------------------------------------------------------------------- Home page -------------------------------------------------#
@@ -398,7 +397,7 @@ def sections(Id):
 @login_required
 def delete_section(Id, sec_id):
     """ delete sections """
-    section = dbsession.query(Sections).filter(Sections.Id==sec_id).first()
+    section = dbsession.query(Sections).join(Users, Users.Id==Sections.UserID).filter(Sections.Id==sec_id).first()
     dbsession.delete(section)
     dbsession.commit()
     return redirect("/{}/projects".format(Id))
@@ -409,7 +408,7 @@ def delete_section(Id, sec_id):
 def edit_section(Id, sec_id):
     """ edit sections """
     form = SectionEditForm()
-    section = dbsession.query(Sections).filter(Sections.Id==sec_id).first()
+    section = dbsession.query(Sections).join(Users, Users.Id==Sections.UserID).filter(Sections.Id==sec_id).first()
 
     if form.validate_on_submit():
         section.Name = form.e_section_name.data
@@ -431,7 +430,7 @@ def projects(Id):
     st_form = SubtaskEditForm()
 
     # table user projects
-    t_projects = dbsession.query(Projects.Id, Projects.Name, Projects.Description, Projects.SD, Projects.DD, Sections.Id.label("Section_id"), Sections.Name.label("Section_name")).join(ProjectSections, ProjectSections.ProjectID==Projects.Id).join(Sections, Sections.Id==ProjectSections.SectionID).where(ProjectSections.UserID==Id).all()
+    t_projects = dbsession.query(Projects.Id, Projects.Name, Projects.Description, Projects.SD, Projects.DD, Sections.Id.label("Section_id"), Sections.Name.label("Section_name")).join(Sections, Sections.Id==Projects.SectionID).where(Projects.UserID==Id).all()
     # user sections including default
     all_user_sections = dbsession.query(Sections).filter(or_(Sections.UserID==Id)|(Sections.Name=='Default')).all()
 
@@ -454,22 +453,13 @@ def projects(Id):
             Name = form.project_name.data,
             Description = form.project_description.data,
             SD = form.project_SD.data,
-            DD = form.project_DD.data
+            DD = form.project_DD.data,
+            SectionID = form.project_section.data,
+            UserID = Id
             )
 
         dbsession.add(new_project)
         dbsession.commit()
-
-
-        query = dbsession.query(Projects).filter(Projects.Name==form.project_name.data).first()
-        new_proj_section = ProjectSections(
-            SectionID = form.project_section.data,
-            ProjectID = query.Id,
-            UserID = Id
-            )
-        dbsession.add(new_proj_section)
-        dbsession.commit()
-
 
         return redirect("/{}/projects".format(Id))
 
@@ -485,9 +475,6 @@ def delete_project(Id, project_id):
     dbsession.delete(project)
     dbsession.commit()
 
-    project_section = dbsession.query(ProjectSections).filter(ProjectSections.ProjectID==project_id).first()
-    dbsession.delete(project_section)
-    dbsession.commit()
     return redirect("/{}/projects".format(Id))
 
 
@@ -504,10 +491,7 @@ def edit_project(Id, project_id):
         project.Description = form.e_project_description.data
         project.SD = form.e_project_SD.data
         project.DD = form.e_project_DD.data
-        dbsession.commit()
-
-        project_section = dbsession.query(ProjectSections).filter(ProjectSections.ProjectID==project_id).first()
-        project_section.SectionID = form.e_project_section.data
+        project.SectionID = form.e_project_section.data
         dbsession.commit()
 
     return redirect("/{}/projects".format(Id))
@@ -522,7 +506,7 @@ def tasks(Id):
     form = TaskAddForm()
     u_tasks = dbsession.query(Tasks.Id, Tasks.Name, Tasks.Description, Tasks.SD, Tasks.DD, Tasks.ProjectID, Tasks.PriorityID, Priorities.Name.label("Priority_name"), Projects.Name.label("Project_name")).join(Priorities, Priorities.Id==Tasks.PriorityID).join(Projects, Projects.Id==Tasks.ProjectID).where(Tasks.Recorder==Id).all()
 
-    u_projects = dbsession.query(Projects).join(ProjectSections, ProjectSections.ProjectID==Projects.Id).filter(ProjectSections.UserID==Id).all()
+    u_projects = dbsession.query(Projects).filter(Projects.UserID==Id).all()
     priorities = dbsession.query(Priorities).all()
 
     if form.validate_on_submit():
