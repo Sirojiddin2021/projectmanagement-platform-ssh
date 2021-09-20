@@ -14,8 +14,8 @@ app.py contains below functions:
 7. Create/Update/Delete Subtasks
 8. Form validation
 
-forms.py contains: Forms validation
+**forms.py** contains form validations
 
-initialization.py contains: declarative_base, all database create queries(models)
+**initialization.py** contains database model
 
 **project.db** database file
