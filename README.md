@@ -27,7 +27,7 @@ Up to now, website works with single user, there is no link between users. In th
   - *delete_subtask* > delete subtask function/route
   - *edit_subtask* > update/edit subtask function/route
 9. Error handlers
-
+10. Other files:
 **forms.py** contains form validations
 
 **initialization.py** contains database model
